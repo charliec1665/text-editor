@@ -22,6 +22,32 @@ module.exports = () => {
         template: './index.html',
         title: 'Webpack Plugin',
       }),
+      new WebpackPwaManifest({
+        name: 'Just Another Text Editor',
+        short_name: 'JATE',
+        description: 'Take and keep track of notes and code snippets',
+        background_color: '#272822',
+        theme_color: '#272822',
+        start_url:'./',
+        publicPath: './',
+        icons: [
+          {
+            src: path.resolve('src/images/logo.png'),
+            sizes: [96, 128, 192, 256, 384, 512],
+            destination: path.join('assets', 'icons'),
+          },
+          {
+            src: path.resolve('src/images/logo.png'),
+            size: '1024x1024',
+            destination: path.join('assets', 'icons'),
+            purpose: 'maskable',
+          }
+        ]
+      }),
+      new InjectManifest({
+        swSrc: './src/src-sw.js',
+        swDest: 'service-worker.js'
+      })
     ],
 
     module: {
