@@ -7,6 +7,23 @@ const { precacheAndRoute } = require('workbox-precaching/precacheAndRoute');
 
 precacheAndRoute(self.__WB_MANIFEST);
 
+// const cacheName = 'static-resources';
+// const matchCallback = ({ request }) => {
+//   console.log(request);
+//   return (
+//     // CSS
+//     request.destination === 'style' ||
+//     // Javascript
+//     request.destination === 'script'
+//   );
+// };
+
+// registerRoute(
+//   matchCallback,
+//   newStale
+// )
+
+// Register route for caching page
 const pageCache = new CacheFirst({
   cacheName: 'page-cache',
   plugins: [
@@ -25,6 +42,23 @@ warmStrategyCache({
 });
 
 registerRoute(({ request }) => request.mode === 'navigate', pageCache);
+
+// Register route for caching images
+registerRoute(
+  ({ request }) => request.destination === 'image',
+  new CacheFirst({
+    cacheName: 'my-image-cache',
+    plugins: [
+      new CacheableResponsePlugin({
+        statuses: [0, 200],
+      }),
+      new ExpirationPlugin({
+        maxEntries: 60,
+        maxAgeSeconds: 30 * 24 * 60 * 60, // 30 Days
+      })
+    ]
+  })
+);
 
 // TODO: Implement asset caching
 registerRoute();
