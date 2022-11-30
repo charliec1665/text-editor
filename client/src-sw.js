@@ -7,22 +7,6 @@ const { precacheAndRoute } = require('workbox-precaching/precacheAndRoute');
 
 precacheAndRoute(self.__WB_MANIFEST);
 
-// const cacheName = 'static-resources';
-// const matchCallback = ({ request }) => {
-//   console.log(request);
-//   return (
-//     // CSS
-//     request.destination === 'style' ||
-//     // Javascript
-//     request.destination === 'script'
-//   );
-// };
-
-// registerRoute(
-//   matchCallback,
-//   newStale
-// )
-
 // Register route for caching page
 const pageCache = new CacheFirst({
   cacheName: 'page-cache',
@@ -45,7 +29,7 @@ registerRoute(({ request }) => request.mode === 'navigate', pageCache);
 
 // Register route for caching images
 registerRoute(
-  ({ request }) => request.destination === 'image',
+  ({ request }) => ['style', 'script', 'worker'].includes(request.destination),
   new CacheFirst({
     cacheName: 'my-image-cache',
     plugins: [
@@ -60,6 +44,5 @@ registerRoute(
   })
 );
 
-// TODO: Implement asset caching
 registerRoute();
 offlineFallback();
