@@ -30,7 +30,6 @@ module.exports = () => {
         start_url:'/',
         publicPath: '/',
         fingerprints: false,
-        inject: false,
         icons: [
           {
             src: path.resolve('src/images/logo.png'),
